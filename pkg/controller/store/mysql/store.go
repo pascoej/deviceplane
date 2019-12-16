@@ -1811,6 +1811,25 @@ func (s *Store) UpdateApplicationSchedulingRule(ctx context.Context, id, project
 	return s.GetApplication(ctx, id, projectID)
 }
 
+func (s *Store) UpdateApplicationServiceMetricsConfig(ctx context.Context, id, projectID string, serviceMetricsConfig map[string]models.ServiceMetricConfig) (*models.Application, error) {
+	serviceMetricsConfigBytes, err := json.Marshal(serviceMetricsConfig)
+	if err != nil {
+		return nil, err
+	}
+
+	if _, err := s.db.ExecContext(
+		ctx,
+		updateApplicationServiceMetricsConfig,
+		string(serviceMetricsConfigBytes),
+		id,
+		projectID,
+	); err != nil {
+		return nil, err
+	}
+
+	return s.GetApplication(ctx, id, projectID)
+}
+
 func (s *Store) DeleteApplication(ctx context.Context, id, projectID string) error {
 	_, err := s.db.ExecContext(
 		ctx,

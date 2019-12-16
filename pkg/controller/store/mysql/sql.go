@@ -523,17 +523,17 @@ const createApplication = `
 `
 
 const getApplication = `
-  select id, created_at, project_id, name, description, scheduling_rule from applications
+  select id, created_at, project_id, name, description, scheduling_rule, service_metrics_config from applications
   where id = ? and project_id = ?
 `
 
 const lookupApplication = `
-  select id, created_at, project_id, name, description, scheduling_rule from applications
+  select id, created_at, project_id, name, description, scheduling_rule, service_metrics_config from applications
   where name = ? and project_id = ?
 `
 
 const listApplications = `
-  select id, created_at, project_id, name, description, scheduling_rule from applications
+  select id, created_at, project_id, name, description, scheduling_rule, service_metrics_config from applications
   where project_id = ?
 `
 
@@ -552,6 +552,12 @@ const updateApplicationDescription = `
 const updateApplicationSchedulingRule = `
   update applications
   set scheduling_rule = ?
+  where id = ? and project_id = ?
+`
+
+const updateApplicationServiceMetricsConfig = `
+  update applications
+  set service_metrics_config = ?
   where id = ? and project_id = ?
 `
 
