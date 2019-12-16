@@ -2,10 +2,10 @@ package models
 
 import "time"
 
-// ServiceMetricConfig is Used for metrics scraping
+// ServiceMetricConfig is used for metrics scraping
 type ServiceMetricConfig struct {
-	Port     uint   `json:"port" yaml:"port"`
-	Endpoint string `json:"endpoint" yaml:"endpoint"`
+	Port uint   `json:"port" yaml:"port"`
+	Path string `json:"path" yaml:"path"`
 }
 
 // The following are used for metrics forwarding

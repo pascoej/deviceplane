@@ -154,12 +154,13 @@ type DeviceAccessKey struct {
 }
 
 type Application struct {
-	ID             string    `json:"id" yaml:"id"`
-	CreatedAt      time.Time `json:"createdAt" yaml:"createdAt"`
-	ProjectID      string    `json:"projectId" yaml:"projectId"`
-	Name           string    `json:"name" yaml:"name"`
-	Description    string    `json:"description" yaml:"description"`
-	SchedulingRule Query     `json:"schedulingRule" yaml:"schedulingRule"`
+	ID                   string                         `json:"id" yaml:"id"`
+	CreatedAt            time.Time                      `json:"createdAt" yaml:"createdAt"`
+	ProjectID            string                         `json:"projectId" yaml:"projectId"`
+	Name                 string                         `json:"name" yaml:"name"`
+	Description          string                         `json:"description" yaml:"description"`
+	SchedulingRule       Query                          `json:"schedulingRule" yaml:"schedulingRule"`
+	ServiceMetricsConfig map[string]ServiceMetricConfig `json:"serviceMetricsConfig" yaml:"serviceMetricsConfig"`
 }
 
 type ApplicationDeviceCounts struct {

@@ -1842,6 +1842,8 @@ func (s *Store) DeleteApplication(ctx context.Context, id, projectID string) err
 
 func (s *Store) scanApplication(scanner scanner) (*models.Application, error) {
 	var schedulingRuleStr string
+	var serviceMetricsConfigStr string
+
 	var application models.Application
 	if err := scanner.Scan(
 		&application.ID,
@@ -1850,6 +1852,7 @@ func (s *Store) scanApplication(scanner scanner) (*models.Application, error) {
 		&application.Name,
 		&application.Description,
 		&schedulingRuleStr,
+		&serviceMetricsConfigStr,
 	); err != nil {
 		return nil, err
 	}
@@ -1858,6 +1861,14 @@ func (s *Store) scanApplication(scanner scanner) (*models.Application, error) {
 		application.SchedulingRule = make([]models.Filter, 0)
 	} else {
 		err := json.Unmarshal([]byte(schedulingRuleStr), &application.SchedulingRule)
+		if err != nil {
+			return nil, err
+		}
+	}
+	if serviceMetricsConfigStr == "" {
+		application.ServiceMetricsConfig = make(map[string]models.ServiceMetricConfig, 0)
+	} else {
+		err := json.Unmarshal([]byte(serviceMetricsConfigStr), &application.ServiceMetricsConfig)
 		if err != nil {
 			return nil, err
 		}
