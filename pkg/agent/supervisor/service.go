@@ -143,9 +143,6 @@ func (s *ServiceSupervisor) reconcileLoop() {
 			}
 
 			startCanceler()
-			if err = s.imagePuller.Pull(ctx, service.Image); err != nil {
-				goto cont
-			}
 
 			s.sendKeepAliveDeactivate()
 
@@ -157,7 +154,6 @@ func (s *ServiceSupervisor) reconcileLoop() {
 			}
 		} else {
 			startCanceler()
-			s.imagePuller.Pull(ctx, service.Image)
 		}
 
 		s.sendKeepAliveDeactivate()
