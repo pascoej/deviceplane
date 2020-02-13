@@ -5,4 +5,5 @@ const (
 	StatusDeviceConnectionFailure       = 601
 	StatusMetricsNotAvailable           = 602
 	StatusImagePullProgressNotAvailable = 603
+	StatusServiceLogsNotAvailable       = 604
 )

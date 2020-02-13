@@ -73,6 +73,20 @@ func ContainerRemove(ctx context.Context, eng engine.Engine, id string) error {
 	}, 2*time.Minute)
 }
 
+func ContainerLogs(ctx context.Context, eng engine.Engine, id string) (string, error) {
+	var result string
+	err := Retry(ctx, func(ctx context.Context) error {
+		if logs, err := eng.FetchContainerLogs(ctx, id); err != nil && err != engine.ErrInstanceNotFound {
+			log.WithError(err).Error("container logs")
+			return err
+		} else {
+			result = logs
+			return nil
+		}
+	}, 2*time.Minute)
+	return result, err
+}
+
 func ImagePull(ctx context.Context, eng engine.Engine, image string, getRegistryAuth func() string, w io.Writer) error {
 	return Retry(ctx, func(ctx context.Context) error {
 		if err := eng.PullImage(ctx, canonical_image.ToCanonical(image), getRegistryAuth(), w); err != nil {

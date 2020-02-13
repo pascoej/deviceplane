@@ -186,6 +186,39 @@ func (s *Service) serviceMetrics(w http.ResponseWriter, r *http.Request,
 	})
 }
 
+func (s *Service) serviceLogs(w http.ResponseWriter, r *http.Request,
+	projectID, authenticatedUserID, authenticatedServiceAccountID,
+	applicationID, deviceID string,
+) {
+	vars := mux.Vars(r)
+	service := vars["service"]
+
+	app, err := s.applications.GetApplication(r.Context(), applicationID, projectID)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	serviceMetricEndpointConfig, exists := app.MetricEndpointConfigs[service]
+	if !exists {
+		serviceMetricEndpointConfig.Port = models.DefaultMetricPort
+		serviceMetricEndpointConfig.Path = models.DefaultMetricPath
+	}
+
+	s.withDeviceConnection(w, r, projectID, deviceID, func(deviceConn net.Conn) {
+		resp, err := client.GetServiceLogs(
+			r.Context(), deviceConn, applicationID, service,
+			serviceMetricEndpointConfig.Path, serviceMetricEndpointConfig.Port,
+		)
+		if err != nil {
+			http.Error(w, err.Error(), codes.StatusDeviceConnectionFailure)
+			return
+		}
+
+		utils.ProxyResponseFromDevice(w, resp)
+	})
+}
+
 func (s *Service) withHijackedWebSocketConnection(w http.ResponseWriter, r *http.Request, f func(net.Conn)) {
 	conn, err := s.upgrader.Upgrade(w, r, nil)
 	if err != nil {

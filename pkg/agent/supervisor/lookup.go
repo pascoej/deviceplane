@@ -1,8 +1,14 @@
 package supervisor
 
+import (
+	"context"
+	"errors"
+)
+
 type Lookup interface {
 	GetContainerID(applicationID string, service string) (string, bool)
 	GetImagePullProgress(applicationID string, service string) (map[string]PullEvent, bool)
+	GetServiceLogs(ctx context.Context, applicationID string, service string) (string, error)
 }
 
 var _ Lookup = &Supervisor{}
@@ -31,6 +37,23 @@ func (s *Supervisor) GetImagePullProgress(applicationID, service string) (map[st
 		progress, ok = s.imagePuller.Progress()
 	})
 	return progress, ok
+}
+
+func (s *Supervisor) GetServiceLogs(ctx context.Context, applicationId, service string) (string, error) {
+	var result string
+	var err error
+	s.withServiceSupervisor(applicationId, service, func(s *ServiceSupervisor) {
+		value := s.containerID.Load()
+		if value == nil {
+			err = errors.New("could not load container id")
+			return
+		}
+		containerId := value.(string)
+		logs, serr := s.engine.FetchContainerLogs(ctx, containerId)
+		result = logs
+		err = serr
+	})
+	return result, err
 }
 
 func (s *Supervisor) withServiceSupervisor(

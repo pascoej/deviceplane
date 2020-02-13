@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"strings"
 
 	"github.com/deviceplane/deviceplane/pkg/engine"
@@ -112,6 +113,23 @@ func (e *Engine) RemoveContainer(ctx context.Context, id string) error {
 		return engine.ErrInstanceNotFound
 	}
 	return nil
+}
+
+func (e *Engine) FetchContainerLogs(ctx context.Context, id string) (string, error) {
+	if r, err := e.client.ContainerLogs(ctx, id, types.ContainerLogsOptions{ShowStderr:true, ShowStdout:true}); err != nil {
+		// TODO
+		if strings.Contains(err.Error(), "No such container") {
+			return "", engine.ErrInstanceNotFound
+		}
+		return "", err
+	} else {
+		defer r.Close()
+		if contents, err := ioutil.ReadAll(r); err != nil {
+			return string(contents), errors.New("Error reading response")
+		} else {
+			return string(contents), nil
+		}
+	}
 }
 
 func (e *Engine) PullImage(ctx context.Context, image, registryAuth string, w io.Writer) error {

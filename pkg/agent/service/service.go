@@ -50,6 +50,7 @@ func NewService(
 	s.router.HandleFunc("/reboot", s.reboot).Methods("POST")
 	s.router.HandleFunc("/applications/{application}/services/{service}/imagepullprogress", s.imagePullProgress).Methods("GET")
 	s.router.HandleFunc("/applications/{application}/services/{service}/metrics", s.metrics).Methods("GET")
+	s.router.HandleFunc("/applications/{application}/services/{service}/logs", s.logs).Methods("GET")
 	s.router.Handle("/metrics/host", metrics.FilteredHostMetricsHandler())
 	s.router.Handle("/metrics/agent", promhttp.Handler())
 

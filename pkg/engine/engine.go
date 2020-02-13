@@ -19,6 +19,7 @@ type Engine interface {
 	ListContainers(context.Context, map[string]struct{}, map[string]string, bool) ([]Instance, error)
 	StopContainer(context.Context, string) error
 	RemoveContainer(context.Context, string) error
+	FetchContainerLogs(context.Context, string) (string, error)
 
 	PullImage(context.Context, string, string, io.Writer) error
 }

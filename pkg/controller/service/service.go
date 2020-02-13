@@ -240,6 +240,7 @@ func NewService(
 	apiRouter.HandleFunc("/projects/{project}/devices/{device}/metrics/host", s.validateAuthorization(authz.ResourceDevices, authz.ActionGetMetrics, s.withDevice(s.hostMetrics))).Methods("GET")
 	apiRouter.HandleFunc("/projects/{project}/devices/{device}/metrics/agent", s.validateAuthorization(authz.ResourceDevices, authz.ActionGetMetrics, s.withDevice(s.agentMetrics))).Methods("GET")
 	apiRouter.HandleFunc("/projects/{project}/devices/{device}/applications/{application}/services/{service}/metrics", s.validateAuthorization(authz.ResourceDevices, authz.ActionGetServiceMetrics, s.withApplicationAndDevice(s.serviceMetrics))).Methods("GET")
+	apiRouter.HandleFunc("/projects/{project}/devices/{device}/applications/{application}/services/{service}/logs", s.validateAuthorization(authz.ResourceDevices, authz.ActionGetContainerLogs, s.withApplicationAndDevice(s.serviceLogs))).Methods("GET")
 	apiRouter.PathPrefix("/projects/{project}/devices/{device}/debug/").HandlerFunc(s.validateAuthorization(authz.ResourceDevices, authz.ActionGetMetrics, s.withDevice(s.deviceDebug)))
 
 	apiRouter.HandleFunc("/projects/{project}/devices/{device}/labels", s.validateAuthorization(authz.ResourceDeviceLabels, authz.ActionSetDeviceLabel, s.withDevice(s.setDeviceLabel))).Methods("PUT")

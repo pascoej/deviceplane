@@ -27,6 +27,7 @@ const (
 	ActionGetImagePullProgress         = Action("GetImagePullProgress")
 	ActionGetMetrics                   = Action("GetMetrics")
 	ActionGetServiceMetrics            = Action("GetServiceMetrics")
+	ActionGetContainerLogs             = Action("GetContainerLogs")
 	ActionGetDeviceRegistrationToken   = Action("GetDeviceRegistrationToken")
 	ActionListDeviceRegistrationTokens = Action("ListDeviceRegistrationTokens")
 	ActionGetProjectConfig             = Action("GetProjectConfig")
@@ -95,6 +96,7 @@ var (
 		ActionGetImagePullProgress,
 		ActionGetMetrics,
 		ActionGetServiceMetrics,
+		ActionGetContainerLogs,
 		ActionGetDeviceRegistrationToken,
 		ActionListDeviceRegistrationTokens,
 		ActionGetProjectConfig,
